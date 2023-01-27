@@ -1,1 +1,22 @@
-df -h >>/tmp/eplnx421.out
+---
+- name: Sentinal installatio on redhat servers
+  hosts: all
+  tasks:
+  - name: upload script to servers
+    copy:
+      src: "/automation/scripts/SentinelAgent-Linux-22-2-2-2-x86-64-release-22-2-2_linux_v22_2_2_2.rpm"
+      dest: "/tmp/"
+      mode: 0755
+
+  - name: rpm installtion
+    shell: 'rpm -ivh /tmp/SentinelAgent-Linux-22-2-2-2-x86-64-release-22-2-2_linux_v22_2_2_2.rpm'
+
+
+  - name: register server  with sentinel server
+    shell: '/opt/sentinelone/bin/sentinelctl management token set eyJ1cmwiOiAiaHR0cHM6Ly91c2VhMS11bmZpLnNlbnRpbmVsb25lLm5ldCIsICJzaXRlX2tleSI6ICI5YzBmMWM2ZGU0NjhjNDJkIn0'
+
+  - name: start sentinel agent
+    shell: '/opt/sentinelone/bin/sentinelctl control start'
+
+  - name: verify the sentinel agent
+    shell: '/opt/sentinelone/bin/sentinelctl control  status'
